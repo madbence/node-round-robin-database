@@ -7,12 +7,33 @@ It's pertty much the same as [whisper](https://github.com/graphite-project/whisp
 
 *Do not use, it's not stable yet*
 
+```js
+var db = new DB({
+  retentions: [{      // store 15s precision for a week
+    retention: 40320,
+    resolution: 15,
+  }, {
+    retention: 30240, // 1m precision for 3 weeks
+    resolution: 60,
+  }, {
+    retention: 43800, // 1h precision for 5 years
+    resolution: 3600
+  }]
+})
+
+// ...
+
+db.write(time, value);
+```
+
 ## Under the Hood
 
 Data is stored in a single `Buffer`, which holds `{time,value}` pairs,
 every point has a size of 8 bytes (32 bit timestamp, 32 bit float value).
 
-On write, the given value propagates through every layer.
+If you wan to store 15s precision values for a week, 1m precision values for 3 weeks,
+1h precision values for 5 years, the `Buffer`s size will be
+`(7*24*3600/15+21*24*3600/60+5*365*24*3600/3600)*8/1024 = 893KB`. That's pretty good.
 
 ## TODO
 
