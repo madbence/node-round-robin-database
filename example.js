@@ -8,22 +8,24 @@ function wait(ms) {
 }
 
 var db = new DB({
-  retentions: [{
-    retention: 20,
-    resolution: 1
+  layers: [{
+    points: 20,
+    precision: 1
   }, {
-    retention: 10,
-    resolution: 5
+    points: 10,
+    precision: 5
   }, {
-    retention: 50,
-    resolution: 10
+    points: 25,
+    precision: 10
   }]
 });
 
 var i = 0;
 co(function*() {
-  for(;;) {
-    db.write(Math.floor(Date.now()/1000), Math.random()*100);
-    yield wait(1000);
+  for(;i<100000;) {
+    db.write(i++, Math.random()*100);
+    //console.log('---');
+    //yield wait(1);
   }
+  console.log('whoop!')
 })();
